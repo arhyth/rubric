@@ -19,7 +19,13 @@ const RADIX: u32 = 10;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let file = File::open("/Users/arhyth/git-shit/1brc/measurements.txt")?;
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() != 2 {
+        eprintln!("Usage: ./rubric <filepath>");
+        std::process::exit(1);
+    }
+    let filepath = &args[1];
+    let file = File::open(filepath)?;
     let reader = BufReader::with_capacity((256 * 1024) as usize, file);
 
     let (tx, rx) = channel::<Vec<u8>>(128);
